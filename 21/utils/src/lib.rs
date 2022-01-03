@@ -18,3 +18,12 @@ pub fn get_line_count() -> usize {
 
     reader.lines().count()
 }
+
+
+pub fn convert_bits_to_integer(iter: &mut dyn Iterator<Item=i32>) -> i32 {
+    iter.reduce(|acc, item| (acc * 2 + item)).unwrap()
+}
+
+pub fn convert_bit_slice_to_integer(slice: &[i32]) -> i32 {
+    slice.iter().copied().reduce(|acc, item| (acc * 2 + item)).unwrap()
+}

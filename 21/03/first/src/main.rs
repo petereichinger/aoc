@@ -1,4 +1,4 @@
-use utils::{get_line_count, read_input_by_lines};
+use utils::{convert_bits_to_integer, get_line_count, read_input_by_lines};
 
 fn main() {
     let count = get_line_count() as u32;
@@ -22,7 +22,7 @@ fn main() {
         }
     ).collect::<Vec<i32>>();
 
-    let gamma = bits.iter().copied().reduce(|acc, item| (acc * 2 + item)).unwrap();
-    let epsilon = bits.iter().copied().map(|digit| 1 - digit).reduce(|acc, item| (acc * 2 + item)).unwrap();
+    let gamma = convert_bits_to_integer(&mut bits.iter().copied());
+    let epsilon = convert_bits_to_integer(&mut bits.iter().copied().map(|digit| 1 - digit));
     println!("Gamma {} Epsilon {} Product {}", gamma, epsilon, gamma * epsilon);
 }

@@ -3,16 +3,27 @@ use utils::{convert_bit_slice_to_integer, convert_bits_to_integer, get_line_coun
 
 fn find_value(mut values: Vec<Vec<i32>>, most_common: bool) -> Vec<i32> {
     for digit in 0..12 {
-        let numbers = values.iter().map(|val| val[digit]).counts();
+        let sum = values.iter().map(|vals| vals[digit] as f32).sum::<f32>();
 
-        let filter=
-            if most_common {
-                if numbers.get(&1) >= numbers.get(&0) {1} else {0}
+
+        let filter = if most_common {
+            if sum >= (values.len() as f32 / 2.0) {
+                1
             } else {
-                if numbers.get(&1) >= numbers.get(&0) {0} else {1}
-            };
+                0
+            }
+        } else {
+            if sum >= (values.len() as f32 / 2.0) {
+                0
+            } else {
+                1
+            }
+        };
+
+        println!("{} {}", sum, values.len());
 
         values.retain(|vals| vals[digit] == filter);
+
 
         if values.len() == 1 {
             break;
