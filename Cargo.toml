@@ -1,4 +1,4 @@
 [workspace]
 members = [
-    "21/utils", "21/*/first","21/*/second",
+    "21/utils", "21/*/first","21/*/second","21/*/whole"
 ]

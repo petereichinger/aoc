@@ -24,7 +24,6 @@ impl Line {
 }
 
 pub struct LineInterpolator {
-    line: Line,
     current: Coord,
     direction: Coord,
     end: Coord,
@@ -40,7 +39,7 @@ impl LineInterpolator {
 
         let direction = Coord { x: x_dir, y: y_dir };
 
-        LineInterpolator { line: *line, current: line.start, direction, end: line.end + direction }
+        LineInterpolator { current: line.start, direction, end: line.end + direction }
     }
 }
 
