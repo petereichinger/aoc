@@ -1,9 +1,8 @@
 [package]
-name = "aoc-04-second"
+name = "aoc-05-first"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 itertools = "0.10.3"
-retain_mut = "0.1.5"
 utils = {path = "../../utils"}

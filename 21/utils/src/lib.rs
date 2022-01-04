@@ -1,3 +1,6 @@
+pub mod bingo;
+pub mod coord;
+
 use std::fs::File;
 use std::io::{BufRead, BufReader, Lines};
 use std::iter::{FilterMap};

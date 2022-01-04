@@ -1,53 +1,37 @@
-use itertools::Itertools;
-use utils::{convert_bit_slice_to_integer, convert_bits_to_integer, get_line_count, read_input_by_lines};
+use retain_mut::RetainMut;
+use utils::{bingo::Bingo, read_input_by_lines};
 
-fn find_value(mut values: Vec<Vec<i32>>, most_common: bool) -> Vec<i32> {
-    for digit in 0..12 {
-        let sum = values.iter().map(|vals| vals[digit] as f32).sum::<f32>();
+fn main() {
+    let mut lines = read_input_by_lines();
 
+    let numbers = lines.next().unwrap();
 
-        let filter = if most_common {
-            if sum >= (values.len() as f32 / 2.0) {
-                1
-            } else {
-                0
-            }
+    let calls: Vec<u32> = numbers.split(',').map(|val| val.parse::<u32>().unwrap()).collect();
+
+    let mut bingos = Vec::new();
+
+    while let Some(_) = lines.next() {
+        let numbers = [lines.next().unwrap(), lines.next().unwrap(), lines.next().unwrap(), lines.next().unwrap(), lines.next().unwrap()];
+
+        let bingo = Bingo::from_row_strings(numbers);
+
+        bingos.push(bingo);
+    }
+
+    for call in calls {
+        if bingos.len() != 1 {
+            bingos.retain_mut(|bingo| !bingo.call(call));
         } else {
-            if sum >= (values.len() as f32 / 2.0) {
-                0
-            } else {
-                1
+            let mut bingo = &mut bingos[0];
+
+            if !bingo.call(call) {
+                continue;
             }
-        };
 
-        println!("{} {}", sum, values.len());
-
-        values.retain(|vals| vals[digit] == filter);
-
-
-        if values.len() == 1 {
+            println!("BINGO with {}", call);
+            println!("{}", bingo);
+            println!("{} {} {}", call, bingo.sum(), call * bingo.sum());
             break;
         }
     }
-
-    assert_eq!(values.len(), 1);
-
-    values.pop().unwrap()
-}
-
-fn main() {
-    // let count = get_line_count() as i32;
-    let parsed_lines = read_input_by_lines()
-        .map(|l| {
-            l.chars().map(|c| (c.to_digit(2).unwrap() as i32)).collect::<Vec<i32>>()
-        }).collect::<Vec<_>>();
-
-    let oxygen = find_value(parsed_lines.clone(), true);
-    println!();
-    let co2 = find_value(parsed_lines.clone(), false);
-
-    let oxygen = convert_bit_slice_to_integer(oxygen.as_slice());
-    let co2 = convert_bit_slice_to_integer(co2.as_slice());
-
-    println!("{} {} {}", oxygen, co2, oxygen * co2);
 }
