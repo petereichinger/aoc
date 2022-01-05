@@ -1,0 +1,14 @@
+[package]
+name = "aoc-11-whole"
+version = "0.1.0"
+edition = "2021"
+resolver = "2"
+
+[dependencies]
+itertools = "0.10.3"
+utils = {path = "../../utils"}
+pixels = "0.9.0"
+winit = "0.26.0"
+winit_input_helper = "0.11.0"
+env_logger= "0.9.0"
+log = "0.4"
