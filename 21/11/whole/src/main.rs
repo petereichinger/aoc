@@ -10,6 +10,7 @@ use utils::{read_input_by_lines, ReadIterator};
 
 const SCREEN_WIDTH: u32 = 10;
 const SCREEN_HEIGHT: u32 = 10;
+const DEFAULT_TIMER: f32 = 0.125;
 
 /// Create a window for the game.
 ///
@@ -73,6 +74,8 @@ struct FlashFishiesSim {
     state: SimBoard,
     swap_state: SimBoard,
     update_timer: f32,
+    flash_count: u32,
+    update_count: u32,
 }
 
 
@@ -81,28 +84,16 @@ impl FlashFishiesSim {
         let mut sim = FlashFishiesSim {
             state: [[0; 10]; 10],
             swap_state: [[0; 10]; 10],
-            update_timer: 1.0,
+            update_timer: DEFAULT_TIMER,
+            flash_count: 0,
+            update_count: 0,
         };
 
-        for (y, line) in lines.enumerate() {
-            for (x, char) in line.chars().enumerate() {
-                sim.state[x][y] = char.to_digit(10).unwrap() as u8;
+        for (str_line, y) in lines.zip(sim.state.iter_mut()) {
+            for (str_x, cell) in str_line.chars().zip(y.iter_mut()) {
+                info!("{}", str_x);
+                *cell = str_x.to_digit(10).unwrap() as u8;
             }
-        }
-
-        sim
-    }
-
-    fn new_increasing()
-        -> FlashFishiesSim {
-        let mut sim = FlashFishiesSim {
-            state: [[0; 10]; 10],
-            swap_state: [[0; 10]; 10],
-            update_timer: 1.0
-        };
-
-        for (val, fish) in (0..100u8).map(|n| n % 10).zip(sim.state.iter_mut().flatten().rev()) {
-            *fish = val;
         }
 
         sim
@@ -111,23 +102,76 @@ impl FlashFishiesSim {
     fn draw(&self, pixels: &mut [u8]) {
         let fishies = self.state.iter().flatten();
         for (fish, pixel) in fishies.zip(pixels.chunks_exact_mut(4)) {
-            let fish: u8 = if *fish == 9 { 0xff } else { 0x0 };
+            let fish: u8 = (((*fish as f32) / 9.0) * 255.0).round() as u8;
             pixel.copy_from_slice(&[fish, fish, fish, 0xff])
         }
     }
 
-    fn update(&mut self, duration: Duration) {
-        self.update_timer -= duration.as_secs_f32();
-        if self.update_timer <= 0.0 {
-            for col in 0..10 {
-                for row in 0..10 {
-                    self.swap_state[col][row] = (self.state[col][row] + 1) % 10
+    fn update(&mut self, _dt: Duration) -> bool {
+        self.update_count += 1;
+
+        let mut new_flash_count = 0;
+
+        // Increase energy by one for each fish
+        for state in self.state.iter_mut().flatten() {
+            *state += 1;
+        }
+
+
+        loop {
+            let mut new_flashes = false;
+
+            self.swap_state.copy_from_slice(self.state.as_slice());
+
+            for (x, y) in (0..10).cartesian_product(0..10) {
+                let last_state = &self.state[y as usize][x as usize];
+
+                if *last_state > 9 {
+                    new_flash_count += 1;
+                    new_flashes = true;
+                    let min_x = 0.max(x - 1);
+                    let min_y = 0.max(y - 1);
+                    let max_x = 9.min(x + 1);
+                    let max_y = 9.min(y + 1);
+
+
+                    // dbg!(x,y);
+                    // dbg!(min_x);
+                    // dbg!(min_y);
+                    // dbg!(max_x);
+                    // dbg!(max_y);
+
+                    self.swap_state[y as usize][x as usize] = 0;
+
+                    for flash_x in min_x..=max_x {
+                        for flash_y in min_y..=max_y {
+                            if x == flash_x && y == flash_y {
+                                continue;
+                            }
+
+                            let flash_cell = &mut self.swap_state[flash_y as usize][flash_x as usize];
+
+                            if *flash_cell != 0 {
+                                *flash_cell += 1;
+                            }
+                        }
+                    }
                 }
             }
 
             std::mem::swap(&mut self.state, &mut self.swap_state);
-            self.update_timer = 1.0
+
+            if !new_flashes {
+                break;
+            }
         }
+
+
+        self.update_timer = DEFAULT_TIMER;
+
+        self.flash_count += new_flash_count;
+
+        self.state.iter().flatten().all(|c| *c == 0)
     }
 }
 
@@ -167,7 +211,19 @@ fn main() -> Result<(), Error> {
             let now = Instant::now();
             let dt = now.duration_since(time);
             time = now;
-            sim.update(dt);
+
+            // if input.key_pressed(VirtualKeyCode::Space) {
+            let synced = sim.update(dt);
+            // }
+
+            if sim.update_count == 100 {
+                println!("After 100 iters: {}", sim.flash_count)
+            }
+
+            if synced {
+                println!("Synced after {}", sim.update_count)
+            }
+
             window.request_redraw();
         }
     });
