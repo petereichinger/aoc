@@ -23,6 +23,9 @@
       <sourceFolder url="file://$MODULE_DIR$/21/09/whole/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/21/10/whole/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/21/11/whole/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/21/12/whole/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/21/13/whole/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/21/14/whole/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

@@ -1,5 +1,5 @@
 [package]
-name = "aoc-12-whole"
+name = "aoc-13-whole"
 version = "0.1.0"
 edition = "2021"
 resolver = "2"
