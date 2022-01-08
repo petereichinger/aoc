@@ -2,13 +2,13 @@ use std::collections::HashMap;
 use itertools::Itertools;
 use utils::read_input_by_lines;
 
-const DEFAULT_CAP: usize = 100_000_000_000;
 
 fn main() {
     let mut lines = read_input_by_lines();
 
-    let mut last = String::with_capacity(DEFAULT_CAP);
-    last.extend(lines.next().unwrap().chars());
+    let initial = lines.next().unwrap();
+
+    let first = initial.chars().nth(0).unwrap();
 
     lines.next();
 
@@ -17,36 +17,42 @@ fn main() {
         (old.to_owned(), new.to_owned())
     }).collect();
 
+    let mut bonds = HashMap::new();
 
-    let mut new = String::with_capacity(1000000000);
+    for bond in initial.chars().tuple_windows().map(|(f, s)| String::from_iter([f, s].iter())) {
+        *bonds.entry(bond).or_insert(0) += 1u128;
+    }
 
-    for iter in 0..40 {
-        let first = last.chars().nth(0).unwrap();
+    let mut new_bonds = HashMap::new();
 
-        new.clear();
+    for _iter in 0..40 {
+        new_bonds.clear();
 
-        new.push(first);
+        for (bond, count) in &bonds {
+            let (f, s) = bond.split_at(1);
+            let new = mappings.get(bond).unwrap();
 
-        for pair in last.as_bytes().windows(2).map(|pair| String::from_utf8(Vec::from(pair)).unwrap()) {
-            let new_element = mappings.get(pair.as_str()).unwrap();
-            new.push(new_element.chars().nth(0).unwrap());
-            new.push(pair.chars().nth(1).unwrap());
+            let f = f.to_owned() + new;
+            let s = new.clone() + s;
+
+            *new_bonds.entry(f).or_insert(0) += count;
+            *new_bonds.entry(s).or_insert(0) += count;
         }
 
-        println!("{}", iter);
-        std::mem::swap(&mut new, &mut last);
+        std::mem::swap(&mut bonds, &mut new_bonds);
     }
 
-    let mut element_counter = HashMap::new();
+    let mut atom_counts = HashMap::new();
 
-    for element in last.chars() {
-        *element_counter.entry(element).or_insert(0) += 1u128;
+    for (bond, count) in &bonds {
+        *atom_counts.entry(bond.chars().nth(1).unwrap()).or_insert(0) += count;
     }
 
-    let ((_, &min), (_, &max)) = element_counter.iter().minmax_by(
-        |(fc, fcnt), (sc, scnt)| fcnt.cmp(scnt)
-    ).into_option().unwrap();
+    *atom_counts.entry(first).or_insert(0) += 1;
 
+    let ((_, min), (_, max)) = atom_counts.iter().minmax_by(|(a, acnt), (b, bcnt)| acnt.cmp(bcnt)).into_option().unwrap();
 
-    println!("{} {} {}", min, max, max - min);
+    println!("{} {} {}", max, min, max - min);
+
+    // dbg!(atom_counts);
 }
