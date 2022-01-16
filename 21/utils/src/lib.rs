@@ -2,17 +2,18 @@ pub mod bingo;
 pub mod coord;
 
 use std::fs::File;
-use std::io::{BufRead, BufReader, Lines};
-use std::iter::{FilterMap};
+use std::io::{BufRead, BufReader};
 
-pub type ReadIterator = FilterMap<Lines<BufReader<File>>, fn(std::io::Result<String>) -> Option<String>>;
-
-pub fn read_input_by_lines() -> ReadIterator {
-    let file = std::fs::File::open("../input").expect("Couldn't find file");
+pub fn read_by_lines(file_name: &str) -> impl Iterator<Item=String> {
+    let file = File::open(file_name).expect("Couldn't find file");
 
     let reader = BufReader::new(file);
 
-    reader.lines().filter_map(|l| l.ok())
+    reader.lines().filter_map(|l| Some(l.unwrap()))
+}
+
+pub fn read_input_by_lines() -> impl Iterator<Item=String> {
+    read_by_lines("../input")
 }
 
 pub fn get_line_count() -> usize {
