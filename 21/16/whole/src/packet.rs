@@ -1,23 +1,81 @@
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub enum Type {
+    None,
+    Sum,
+    Product,
+    Minimum,
+    Maximum,
+    Literal,
+    GreaterThan,
+    LessThan,
+    EqualTo,
+}
+
+impl Type {
+    fn eval(&self, mut operands: impl Iterator<Item=u128>) -> u128 {
+        match self {
+            Type::Sum => { operands.sum() }
+            Type::Product => { operands.reduce(|f, s| f * s).unwrap() }
+            Type::Minimum => { operands.min().unwrap() }
+            Type::Maximum => { operands.max().unwrap() }
+            Type::GreaterThan | Type::LessThan | Type::EqualTo => {
+                let (f, s) = (operands.next().unwrap(), operands.next().unwrap());
+
+                match self {
+                    Type::GreaterThan => { if f > s { 1 } else { 0 } }
+                    Type::LessThan => { if f < s { 1 } else { 0 } }
+                    Type::EqualTo => { if f == s { 1 } else { 0 } }
+                    _ => panic!("NOT HAPPENING")
+                }
+            }
+            _ => panic!("Invalid operator for eval")
+        }
+    }
+}
+
+impl Default for Type {
+    fn default() -> Self {
+        Type::None
+    }
+}
+
+impl From<u8> for Type {
+    fn from(value: u8) -> Self {
+        match value {
+            0 => Self::Sum,
+            1 => Self::Product,
+            2 => Self::Minimum,
+            3 => Self::Maximum,
+            4 => Self::Literal,
+            5 => Self::GreaterThan,
+            6 => Self::LessThan,
+            7 => Self::EqualTo,
+            _ => Self::None
+        }
+    }
+}
+
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct Header {
     version: u8,
-    type_id: u8,
+    type_id: Type,
 }
 
 impl Header {
-    fn new(version: u8, type_id: u8) -> Self {
+    fn new(version: u8, type_id: Type) -> Self {
         Header { version, type_id }
     }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Value(i32);
+pub struct Value(u128);
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum LengthType {
     Bits(usize),
     Count(usize),
 }
+
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Operands(Vec<Box<Packet>>);
@@ -36,7 +94,7 @@ impl Packet {
             let continue_flag = &bits[0..1];
             let digit = &bits[1..5];
 
-            let digit = i32::from_str_radix(digit, 2).unwrap();
+            let digit = u128::from_str_radix(digit, 2).unwrap();
             number *= 16;
             number += digit;
 
@@ -61,7 +119,7 @@ impl Packet {
 
         let version = u8::from_str_radix(version, 2).unwrap();
         let type_id = u8::from_str_radix(type_id, 2).unwrap();
-        let header = Header::new(version, type_id);
+        let header = Header::new(version, Type::from(type_id));
 
         (header, bits)
     }
@@ -121,7 +179,7 @@ impl Packet {
         (operator, bits)
     }
 
-    fn sum_versions(&self) -> u32 {
+    pub fn sum_versions(&self) -> u32 {
         match self {
             Packet::Literal(header, _) => { header.version as u32 }
             Packet::Operator(header, _, operands) => {
@@ -130,11 +188,21 @@ impl Packet {
         }
     }
 
+    pub fn eval(&self) -> u128 {
+        match self {
+            Packet::Literal(_, Value(val)) => { *val as u128 }
+            Packet::Operator(header, _, Operands(ops)) => {
+                let evaluated_operands = ops.iter().map(|op| op.eval());
+                header.type_id.eval(evaluated_operands)
+            }
+        }
+    }
+
     fn parse(bits: &str) -> (Self, &str) {
         let (header, bits) = Packet::parse_header(bits);
 
         match header.type_id {
-            4 => {
+            Type::Literal => {
                 Packet::parse_literal(header, bits)
             }
             _ => {
@@ -154,7 +222,7 @@ impl From<&str> for Packet {
 
 #[cfg(test)]
 mod tests {
-    use crate::packet::{Header, LengthType, Operands, Packet, Value};
+    use crate::packet::{Header, LengthType, Operands, Packet, Value, Type};
 
     #[test]
     fn parse_literal_value() {
@@ -182,12 +250,12 @@ mod tests {
     fn parse_operator_bits() {
         let operator = Packet::from("38006F45291200");
 
-        let expected_operands = Operands(vec![Box::new(Packet::Literal(Header { version: 6, type_id: 4 }, Value(10))),
-                                              Box::new(Packet::Literal(Header { version: 2, type_id: 4 }, Value(20))),
+        let expected_operands = Operands(vec![Box::new(Packet::Literal(Header { version: 6, type_id: Type::Literal }, Value(10))),
+                                              Box::new(Packet::Literal(Header { version: 2, type_id: Type::Literal }, Value(20))),
         ]);
 
         assert_eq!(operator,
-                   Packet::Operator(Header { version: 1, type_id: 6 },
+                   Packet::Operator(Header { version: 1, type_id: Type::from(6) },
                                     LengthType::Bits(27),
                                     expected_operands));
     }
@@ -196,11 +264,11 @@ mod tests {
     fn parse_operator_count() {
         let operator = Packet::from("EE00D40C823060");
 
-        let expected_header = Header::new(7, 3);
+        let expected_header = Header::new(7, Type::from(3));
         let expected_operands = vec![
-            Box::new(Packet::Literal(Header::new(2, 4), Value(1))),
-            Box::new(Packet::Literal(Header::new(4, 4), Value(2))),
-            Box::new(Packet::Literal(Header::new(1, 4), Value(3))),
+            Box::new(Packet::Literal(Header::new(2, Type::from(4)), Value(1))),
+            Box::new(Packet::Literal(Header::new(4, Type::from(4)), Value(2))),
+            Box::new(Packet::Literal(Header::new(1, Type::from(4)), Value(3))),
         ];
         let expected = Packet::Operator(expected_header, LengthType::Count(3), Operands(expected_operands));
 
@@ -209,9 +277,9 @@ mod tests {
 
     #[test]
     fn parse_literal_works() {
-        let literal = Packet::from(include_str!("../../literal"));
+        let literal = Packet::from("D2FE28");
 
-        assert_eq!(literal, Packet::Literal(Header::new(6, 4), Value(2021)))
+        assert_eq!(literal, Packet::Literal(Header::new(6, Type::from(4)), Value(2021)))
     }
 
     #[test]
@@ -219,10 +287,10 @@ mod tests {
         let packet = Packet::from("8A004A801A8002F478");
 
         let expected_operator =
-            Packet::Operator(Header::new(4, 2), LengthType::Count(1), Operands(vec![
-                Box::new(Packet::Operator(Header::new(1, 2), LengthType::Count(1), Operands(vec![
-                    Box::new(Packet::Operator(Header::new(5, 2), LengthType::Bits(11), Operands(vec![
-                        Box::new(Packet::Literal(Header::new(6, 4), Value(15)))
+            Packet::Operator(Header::new(4, Type::from(2)), LengthType::Count(1), Operands(vec![
+                Box::new(Packet::Operator(Header::new(1, Type::from(2)), LengthType::Count(1), Operands(vec![
+                    Box::new(Packet::Operator(Header::new(5, Type::from(2)), LengthType::Bits(11), Operands(vec![
+                        Box::new(Packet::Literal(Header::new(6, Type::from(4)), Value(15)))
                     ])))])))]));
         assert_eq!(packet, expected_operator);
     }
@@ -233,5 +301,17 @@ mod tests {
         assert_eq!(Packet::from("620080001611562C8802118E34").sum_versions(), 12);
         assert_eq!(Packet::from("C0015000016115A2E0802F182340").sum_versions(), 23);
         assert_eq!(Packet::from("A0016C880162017C3686B18A3D4780").sum_versions(), 31);
+    }
+
+    #[test]
+    fn eval() {
+        assert_eq!(Packet::from("C200B40A82").eval(), 3);
+        assert_eq!(Packet::from("04005AC33890").eval(), 54);
+        assert_eq!(Packet::from("880086C3E88112").eval(), 7);
+        assert_eq!(Packet::from("CE00C43D881120").eval(), 9);
+        assert_eq!(Packet::from("D8005AC2A8F0").eval(), 1);
+        assert_eq!(Packet::from("F600BC2D8F").eval(), 0);
+        assert_eq!(Packet::from("9C005AC2F8F0").eval(), 0);
+        assert_eq!(Packet::from("9C0141080250320F1802104A08").eval(), 1);
     }
 }
