@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct Header {
     version: u8,
@@ -34,9 +32,7 @@ impl Packet {
     fn parse_literal_value(mut bits: &str) -> (Value, &str) {
         let mut number = 0;
 
-        let mut hex_digit_count = 0;
         loop {
-            hex_digit_count += 1;
             let continue_flag = &bits[0..1];
             let digit = &bits[1..5];
 
@@ -52,14 +48,12 @@ impl Packet {
 
         (Value(number), bits)
     }
-
     fn parse_literal(header: Header, bits: &str) -> (Packet, &str) {
         let (number, remainder) = Packet::parse_literal_value(bits);
         let literal = Packet::Literal(header, number);
 
         (literal, remainder)
     }
-
     fn parse_header(bits: &str) -> (Header, &str) {
         let (version, bits) = bits.split_at(3);
 
@@ -71,7 +65,6 @@ impl Packet {
 
         (header, bits)
     }
-
     fn parse_operands_bits(length: usize, bits: &str) -> (Operands, &str) {
         let (mut operands_bits, remainder) = bits.split_at(length);
 
@@ -85,8 +78,19 @@ impl Packet {
 
         (Operands(packets), remainder)
     }
-    // fn parse_operands_number(length: usize, bits: &str) -> (Operands, &str) {}
+    fn parse_operands_count(count: usize, bits: &str) -> (Operands, &str) {
+        let mut remainder = bits;
 
+        let mut operands = vec![];
+
+        for _ in 0..count {
+            let (packet, new_remainder) = Self::parse(remainder);
+            operands.push(Box::new(packet));
+            remainder = new_remainder;
+        }
+
+        (Operands(operands), remainder)
+    }
     fn parse_operator(header: Header, bits: &str) -> (Packet, &str) {
         let (length_type, bits) = bits.split_at(1);
 
@@ -105,14 +109,25 @@ impl Packet {
 
         let (operands, bits) = match length_type {
             LengthType::Bits(length) => {
-                Packet::parse_operands_bits(length, bits)
+                Self::parse_operands_bits(length, bits)
             }
-            _ => panic!("length type not supported")
+            LengthType::Count(count) => {
+                Self::parse_operands_count(count, bits)
+            }
         };
 
         let operator = Packet::Operator(header, length_type, operands);
 
         (operator, bits)
+    }
+
+    fn sum_versions(&self) -> u32 {
+        match self {
+            Packet::Literal(header, _) => { header.version as u32 }
+            Packet::Operator(header, _, operands) => {
+                (header.version as u32) + operands.0.iter().map(|op| op.sum_versions()).sum::<u32>()
+            }
+        }
     }
 
     fn parse(bits: &str) -> (Self, &str) {
@@ -178,8 +193,18 @@ mod tests {
     }
 
     #[test]
-    fn parse_operator_number() {
+    fn parse_operator_count() {
         let operator = Packet::from("EE00D40C823060");
+
+        let expected_header = Header::new(7, 3);
+        let expected_operands = vec![
+            Box::new(Packet::Literal(Header::new(2, 4), Value(1))),
+            Box::new(Packet::Literal(Header::new(4, 4), Value(2))),
+            Box::new(Packet::Literal(Header::new(1, 4), Value(3))),
+        ];
+        let expected = Packet::Operator(expected_header, LengthType::Count(3), Operands(expected_operands));
+
+        assert_eq!(operator, expected);
     }
 
     #[test]
@@ -187,5 +212,26 @@ mod tests {
         let literal = Packet::from(include_str!("../../literal"));
 
         assert_eq!(literal, Packet::Literal(Header::new(6, 4), Value(2021)))
+    }
+
+    #[test]
+    fn parse_recursive_operator() {
+        let packet = Packet::from("8A004A801A8002F478");
+
+        let expected_operator =
+            Packet::Operator(Header::new(4, 2), LengthType::Count(1), Operands(vec![
+                Box::new(Packet::Operator(Header::new(1, 2), LengthType::Count(1), Operands(vec![
+                    Box::new(Packet::Operator(Header::new(5, 2), LengthType::Bits(11), Operands(vec![
+                        Box::new(Packet::Literal(Header::new(6, 4), Value(15)))
+                    ])))])))]));
+        assert_eq!(packet, expected_operator);
+    }
+
+    #[test]
+    fn version_sum() {
+        assert_eq!(Packet::from("8A004A801A8002F478").sum_versions(), 16);
+        assert_eq!(Packet::from("620080001611562C8802118E34").sum_versions(), 12);
+        assert_eq!(Packet::from("C0015000016115A2E0802F182340").sum_versions(), 23);
+        assert_eq!(Packet::from("A0016C880162017C3686B18A3D4780").sum_versions(), 31);
     }
 }
