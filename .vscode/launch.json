@@ -1,0 +1,841 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'utils'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=utils"
+                ],
+                "filter": {
+                    "name": "utils",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-01-first'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-01-first",
+                    "--package=aoc-01-first"
+                ],
+                "filter": {
+                    "name": "aoc-01-first",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-01-first'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-01-first",
+                    "--package=aoc-01-first"
+                ],
+                "filter": {
+                    "name": "aoc-01-first",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-02-first'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-02-first",
+                    "--package=aoc-02-first"
+                ],
+                "filter": {
+                    "name": "aoc-02-first",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-02-first'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-02-first",
+                    "--package=aoc-02-first"
+                ],
+                "filter": {
+                    "name": "aoc-02-first",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-03-first'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-03-first",
+                    "--package=aoc-03-first"
+                ],
+                "filter": {
+                    "name": "aoc-03-first",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-03-first'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-03-first",
+                    "--package=aoc-03-first"
+                ],
+                "filter": {
+                    "name": "aoc-03-first",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-04-first'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-04-first",
+                    "--package=aoc-04-first"
+                ],
+                "filter": {
+                    "name": "aoc-04-first",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-04-first'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-04-first",
+                    "--package=aoc-04-first"
+                ],
+                "filter": {
+                    "name": "aoc-04-first",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-05-first'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-05-first",
+                    "--package=aoc-05-first"
+                ],
+                "filter": {
+                    "name": "aoc-05-first",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-05-first'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-05-first",
+                    "--package=aoc-05-first"
+                ],
+                "filter": {
+                    "name": "aoc-05-first",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-01-second'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-01-second",
+                    "--package=aoc-01-second"
+                ],
+                "filter": {
+                    "name": "aoc-01-second",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-01-second'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-01-second",
+                    "--package=aoc-01-second"
+                ],
+                "filter": {
+                    "name": "aoc-01-second",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-02-second'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-02-second",
+                    "--package=aoc-02-second"
+                ],
+                "filter": {
+                    "name": "aoc-02-second",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-02-second'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-02-second",
+                    "--package=aoc-02-second"
+                ],
+                "filter": {
+                    "name": "aoc-02-second",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-03-second'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-03-second",
+                    "--package=aoc-03-second"
+                ],
+                "filter": {
+                    "name": "aoc-03-second",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-03-second'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-03-second",
+                    "--package=aoc-03-second"
+                ],
+                "filter": {
+                    "name": "aoc-03-second",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-04-second'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-04-second",
+                    "--package=aoc-04-second"
+                ],
+                "filter": {
+                    "name": "aoc-04-second",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-04-second'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-04-second",
+                    "--package=aoc-04-second"
+                ],
+                "filter": {
+                    "name": "aoc-04-second",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-05-second'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-05-second",
+                    "--package=aoc-05-second"
+                ],
+                "filter": {
+                    "name": "aoc-05-second",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-05-second'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-05-second",
+                    "--package=aoc-05-second"
+                ],
+                "filter": {
+                    "name": "aoc-05-second",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-06-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-06-whole",
+                    "--package=aoc-06-whole"
+                ],
+                "filter": {
+                    "name": "aoc-06-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-06-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-06-whole",
+                    "--package=aoc-06-whole"
+                ],
+                "filter": {
+                    "name": "aoc-06-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-07-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-07-whole",
+                    "--package=aoc-07-whole"
+                ],
+                "filter": {
+                    "name": "aoc-07-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-07-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-07-whole",
+                    "--package=aoc-07-whole"
+                ],
+                "filter": {
+                    "name": "aoc-07-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-08-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-08-whole",
+                    "--package=aoc-08-whole"
+                ],
+                "filter": {
+                    "name": "aoc-08-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-08-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-08-whole",
+                    "--package=aoc-08-whole"
+                ],
+                "filter": {
+                    "name": "aoc-08-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-09-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-09-whole",
+                    "--package=aoc-09-whole"
+                ],
+                "filter": {
+                    "name": "aoc-09-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-09-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-09-whole",
+                    "--package=aoc-09-whole"
+                ],
+                "filter": {
+                    "name": "aoc-09-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-10-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-10-whole",
+                    "--package=aoc-10-whole"
+                ],
+                "filter": {
+                    "name": "aoc-10-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-10-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-10-whole",
+                    "--package=aoc-10-whole"
+                ],
+                "filter": {
+                    "name": "aoc-10-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-11-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-11-whole",
+                    "--package=aoc-11-whole"
+                ],
+                "filter": {
+                    "name": "aoc-11-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-11-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-11-whole",
+                    "--package=aoc-11-whole"
+                ],
+                "filter": {
+                    "name": "aoc-11-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-12-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-12-whole",
+                    "--package=aoc-12-whole"
+                ],
+                "filter": {
+                    "name": "aoc-12-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-12-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-12-whole",
+                    "--package=aoc-12-whole"
+                ],
+                "filter": {
+                    "name": "aoc-12-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-13-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-13-whole",
+                    "--package=aoc-13-whole"
+                ],
+                "filter": {
+                    "name": "aoc-13-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-13-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-13-whole",
+                    "--package=aoc-13-whole"
+                ],
+                "filter": {
+                    "name": "aoc-13-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-14-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-14-whole",
+                    "--package=aoc-14-whole"
+                ],
+                "filter": {
+                    "name": "aoc-14-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-14-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-14-whole",
+                    "--package=aoc-14-whole"
+                ],
+                "filter": {
+                    "name": "aoc-14-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-15-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-15-whole",
+                    "--package=aoc-15-whole"
+                ],
+                "filter": {
+                    "name": "aoc-15-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-15-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-15-whole",
+                    "--package=aoc-15-whole"
+                ],
+                "filter": {
+                    "name": "aoc-15-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-16-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-16-whole",
+                    "--package=aoc-16-whole"
+                ],
+                "filter": {
+                    "name": "aoc-16-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-16-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-16-whole",
+                    "--package=aoc-16-whole"
+                ],
+                "filter": {
+                    "name": "aoc-16-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'aoc-17-whole'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=aoc-17-whole",
+                    "--package=aoc-17-whole"
+                ],
+                "filter": {
+                    "name": "aoc-17-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'aoc-17-whole'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=aoc-17-whole",
+                    "--package=aoc-17-whole"
+                ],
+                "filter": {
+                    "name": "aoc-17-whole",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
