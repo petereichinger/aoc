@@ -1,5 +1,10 @@
 [workspace]
 members = [
-    "21/utils", "21/*/first","21/*/second","21/*/whole"
+    "21/utils",
+    "21/*/first",
+    "21/*/second",
+    "21/*/whole",
+    "22/utils",
+    "22/day*",
 ]
-resolver="2"
+resolver = "2"
