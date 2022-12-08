@@ -79,9 +79,13 @@ impl<'a> Iterator for ColumnIterator<'a> {
 fn main() {
     let grid = parse(INPUT);
 
+    part1(&grid);
+    part2(&grid);
+}
+fn part1(grid: &Vec<Vec<Entry>>) {
     let mut visible_trees = HashSet::new();
 
-    for row in &grid {
+    for row in grid {
         let fwd = calc_visibility(row.iter());
         let rev = calc_visibility(row.iter().rev());
 
@@ -94,7 +98,7 @@ fn main() {
     let columns = grid[0].len();
     for column in 0..columns {
         let col_entries: Vec<&Entry> = ColumnIterator::new(&grid, column).collect();
-        println!("{:?}", col_entries);
+
         let fwd = calc_visibility(col_entries.iter().copied());
         let rev = calc_visibility(col_entries.iter().copied().rev());
 
@@ -104,6 +108,52 @@ fn main() {
             .collect();
     }
 
-    println!("{:#?}", visible_trees);
     println!("{:?}", visible_trees.len())
+}
+
+fn dir_count(row: &Vec<Entry>, height: i32, indices: impl Iterator<Item = usize>) -> usize {
+    let mut count = 0;
+    for h in indices.map(|idx| row[idx].1) {
+        if h >= height {
+            return count + 1;
+        }
+        count += 1;
+    }
+
+    count
+}
+
+fn count(grid: &Vec<Vec<Entry>>, row: &Vec<Entry>, height: i32, coord: Coord) -> usize {
+    let right_count = dir_count(row, height, (coord.x + 1)..row.len());
+    let left_count = dir_count(row, height, (0..coord.x).rev());
+
+    let column: Vec<Entry> = grid.iter().map(|r| r[coord.x]).collect();
+
+    let down_count = dir_count(&column, height, (coord.y + 1)..column.len());
+    let up_count = dir_count(&column, height, (0..coord.y).rev());
+
+    // println!(
+    //     "{:?} {}\tU{} L{} R{} D{} ",
+    //     coord,
+    //     ,
+    //     up_count,
+    //     left_count,
+    //     right_count,
+    //     down_count,
+    // );
+
+    right_count * left_count * down_count * up_count
+}
+
+fn part2(grid: &Vec<Vec<Entry>>) {
+    let max = grid
+        .iter()
+        .map(|row| {
+            row.iter()
+                .map(|(coord, height)| count(grid, row, *height, *coord))
+        })
+        .flatten()
+        .max();
+
+    println!("{}", max.unwrap());
 }
