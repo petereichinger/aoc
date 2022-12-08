@@ -118,15 +118,13 @@ fn main() {
 
     println!("{sum}");
 
-    let root_size = recursive_dir_size(&mut vec![], 0, &file_tree.root, &root_string);
-    // println!("{root_size}");
+    let mut sizes = vec![];
+
+    let root_size = recursive_dir_size(&mut sizes, 70000000, &file_tree.root, &root_string);
 
     let to_delete_size = 30000000 - (70000000 - root_size);
 
     println!("{to_delete_size}");
-
-    let mut sizes = vec![];
-    recursive_dir_size(&mut sizes, 70000000, &file_tree.root, &root_string);
 
     sizes.retain(|e| e.1 >= to_delete_size);
     sizes.sort_by(|f, s| f.1.cmp(&s.1));
