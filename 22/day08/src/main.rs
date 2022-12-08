@@ -82,6 +82,7 @@ fn main() {
     part1(&grid);
     part2(&grid);
 }
+
 fn part1(grid: &Vec<Vec<Entry>>) {
     let mut visible_trees = HashSet::new();
 
@@ -131,16 +132,6 @@ fn count(grid: &Vec<Vec<Entry>>, row: &Vec<Entry>, height: i32, coord: Coord) ->
 
     let down_count = dir_count(&column, height, (coord.y + 1)..column.len());
     let up_count = dir_count(&column, height, (0..coord.y).rev());
-
-    // println!(
-    //     "{:?} {}\tU{} L{} R{} D{} ",
-    //     coord,
-    //     ,
-    //     up_count,
-    //     left_count,
-    //     right_count,
-    //     down_count,
-    // );
 
     right_count * left_count * down_count * up_count
 }
