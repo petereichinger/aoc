@@ -5,8 +5,8 @@ use std::{
 
 #[derive(Default, Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub struct Coord {
-    pub x: i32,
-    pub y: i32,
+    x: i32,
+    y: i32,
 }
 
 pub const ZERO: Coord = Coord { x: 0, y: 0 };
@@ -14,6 +14,8 @@ pub const UP: Coord = Coord { x: 0, y: 1 };
 pub const DOWN: Coord = Coord { x: 0, y: -1 };
 pub const LEFT: Coord = Coord { x: -1, y: 0 };
 pub const RIGHT: Coord = Coord { x: 1, y: 0 };
+
+pub const ORTHOGONAL_NEIGHBOURS: [Coord; 4] = [UP, RIGHT, DOWN, LEFT];
 
 fn diff(a: i32, b: i32) -> u32 {
     (a - b).unsigned_abs()
@@ -28,6 +30,10 @@ fn normalize(a: i32) -> i32 {
 }
 
 impl Coord {
+    pub fn new(x: i32, y: i32) -> Self {
+        Coord { x, y }
+    }
+
     pub fn distance_to(&self, other: &Self) -> u32 {
         let x_diff = diff(self.x, other.x);
         let y_diff = diff(self.y, other.y);
@@ -40,6 +46,25 @@ impl Coord {
         let y = normalize(self.y);
 
         Coord { x, y }
+    }
+
+    pub fn x(&self) -> i32 {
+        self.x
+    }
+
+    pub fn y(&self) -> i32 {
+        self.y
+    }
+
+    pub fn manhattan(&self, other: &Self) -> u32 {
+        (self.x - other.x).unsigned_abs() + (self.y - other.y).unsigned_abs()
+    }
+
+    pub fn dist(&self, other: &Self) -> f32 {
+        let x = (self.x - other.x).abs() as f32;
+        let y = (self.y - other.y).abs() as f32;
+
+        f32::sqrt(x * x + y * y)
     }
 }
 
