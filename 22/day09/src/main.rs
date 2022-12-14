@@ -4,10 +4,10 @@ use utils_22::Coord;
 
 fn coord_from_char(dir: char) -> Coord {
     match dir {
-        'R' => Coord { x: 1, y: 0 },
-        'U' => Coord { x: 0, y: 1 },
-        'L' => Coord { x: -1, y: 0 },
-        'D' => Coord { x: 0, y: -1 },
+        'R' => Coord::new(1, 0),
+        'U' => Coord::new(0, 1),
+        'L' => Coord::new(-1, 0),
+        'D' => Coord::new(0, 1),
         _ => panic!("Invalid dir {}", dir),
     }
 }
@@ -32,7 +32,7 @@ fn rope_move(num_knots: usize) {
         let count = count.parse::<i32>().unwrap();
 
         for _ in 0..count {
-            knots[0] += dir;
+            knots[0] += &dir;
             for idx in 1..knots.len() {
                 let k = &mut knots[idx - 1..=idx];
                 let (curr_h, curr_s) = k.split_at_mut(1);
@@ -44,9 +44,9 @@ fn rope_move(num_knots: usize) {
                     continue;
                 }
 
-                let diff = *curr_h - *curr_s;
+                let diff = &*curr_h - &*curr_s;
 
-                *curr_s += diff.limit_to_neighbour();
+                *curr_s += &diff.limit_to_neighbour();
             }
             visited_s.insert(knots[knots.len() - 1]);
         }

@@ -60,7 +60,7 @@ fn path_finding(map: &Map, start: Coord, end: Coord) -> Vec<Coord> {
         let current_height = map.get_tile(&current.coord).unwrap();
         for neigh in ORTHOGONAL_NEIGHBOURS
             .iter()
-            .map(|&n| current.coord + n)
+            .map(|n| &current.coord + n)
             .filter(|n| map.coord_on_map(n))
             .filter(|n| {
                 let height = map.get_tile(n);

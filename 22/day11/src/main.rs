@@ -173,15 +173,4 @@ mod tests {
         assert_eq!(monkeys[2].borrow().inspect_count, 7);
         assert_eq!(monkeys[3].borrow().inspect_count, 105);
     }
-
-    #[test]
-    fn part2_verify_after_10000() {
-        let mut monkeys = get_monkeys();
-        super::play_n_rounds(10000, &mut monkeys, &|val| val);
-
-        assert_eq!(monkeys[0].borrow().inspect_count, 52166);
-        assert_eq!(monkeys[1].borrow().inspect_count, 47830);
-        assert_eq!(monkeys[2].borrow().inspect_count, 1938);
-        assert_eq!(monkeys[3].borrow().inspect_count, 52013);
-    }
 }
