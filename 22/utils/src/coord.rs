@@ -11,14 +11,6 @@ pub struct Coord {
     y: i32,
 }
 
-pub const ZERO: Coord = Coord { x: 0, y: 0 };
-pub const UP: Coord = Coord { x: 0, y: 1 };
-pub const DOWN: Coord = Coord { x: 0, y: -1 };
-pub const LEFT: Coord = Coord { x: -1, y: 0 };
-pub const RIGHT: Coord = Coord { x: 1, y: 0 };
-
-pub const ORTHOGONAL_NEIGHBOURS: [Coord; 4] = [UP, RIGHT, DOWN, LEFT];
-
 fn diff(a: i32, b: i32) -> u32 {
     (a - b).unsigned_abs()
 }
@@ -32,6 +24,15 @@ fn normalize(a: i32) -> i32 {
 }
 
 impl Coord {
+    pub const ZERO: Coord = Coord { x: 0, y: 0 };
+    pub const UP: Coord = Coord { x: 0, y: 1 };
+    pub const DOWN: Coord = Coord { x: 0, y: -1 };
+    pub const LEFT: Coord = Coord { x: -1, y: 0 };
+    pub const RIGHT: Coord = Coord { x: 1, y: 0 };
+
+    pub const ORTHOGONAL_NEIGHBOURS: [Coord; 4] =
+        [Coord::UP, Coord::RIGHT, Coord::DOWN, Coord::LEFT];
+
     pub fn new(x: i32, y: i32) -> Self {
         Coord { x, y }
     }
@@ -79,6 +80,20 @@ impl Coord {
         Coord {
             x: normalize(self.x),
             y: normalize(self.y),
+        }
+    }
+
+    pub fn max(&self, other: &Self) -> Self {
+        Self {
+            x: self.x.max(other.x),
+            y: self.y.max(other.y),
+        }
+    }
+
+    pub fn min(&self, other: &Self) -> Self {
+        Self {
+            x: self.x.min(other.x),
+            y: self.y.min(other.y),
         }
     }
 }

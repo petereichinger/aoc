@@ -1,5 +1,3 @@
-use crate::coord::{RIGHT, ZERO};
-
 use super::Coord;
 
 pub struct LineIterator {
@@ -12,11 +10,11 @@ impl LineIterator {
     pub fn new(start: &Coord, end: &Coord) -> Self {
         let diff = end - start;
 
-        if diff == ZERO {
+        if diff == Coord::ZERO {
             return LineIterator {
                 current: *start,
-                end: end + &RIGHT,
-                dir: RIGHT,
+                end: end + &Coord::RIGHT,
+                dir: Coord::RIGHT,
             };
         }
 
@@ -54,11 +52,11 @@ impl Iterator for LineIterator {
 
 #[cfg(test)]
 mod tests {
-    use crate::{coord::ZERO, Coord, LineIterator};
+    use crate::{Coord, LineIterator};
 
     #[test]
     fn iteration_works() {
-        let line_iter = LineIterator::new(&ZERO, &Coord::new(2, 0));
+        let line_iter = LineIterator::new(&Coord::ZERO, &Coord::new(2, 0));
         let coords: Vec<Coord> = line_iter.collect();
 
         assert_eq!(
@@ -69,7 +67,7 @@ mod tests {
 
     #[test]
     fn point_works() {
-        let line_iter = LineIterator::new(&ZERO, &ZERO);
+        let line_iter = LineIterator::new(&Coord::ZERO, &Coord::ZERO);
         let coords: Vec<Coord> = line_iter.collect();
 
         assert_eq!(coords, vec![Coord::new(0, 0)])
@@ -78,6 +76,6 @@ mod tests {
     #[test]
     #[should_panic]
     fn diagonal_fails() {
-        LineIterator::new(&ZERO, &Coord::new(1, 1));
+        LineIterator::new(&Coord::ZERO, &Coord::new(1, 1));
     }
 }
