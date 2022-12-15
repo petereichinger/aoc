@@ -4,7 +4,7 @@ use std::collections::{BinaryHeap, HashMap};
 
 use map::Map;
 use termion::{color, style};
-use utils_22::{Coord, ORTHOGONAL_NEIGHBOURS};
+use utils_22::Coord;
 
 use crate::map::parse_map;
 
@@ -58,7 +58,7 @@ fn path_finding(map: &Map, start: Coord, end: Coord) -> Vec<Coord> {
         }
 
         let current_height = map.get_tile(&current.coord).unwrap();
-        for neigh in ORTHOGONAL_NEIGHBOURS
+        for neigh in Coord::ORTHOGONAL_NEIGHBOURS
             .iter()
             .map(|n| &current.coord + n)
             .filter(|n| map.coord_on_map(n))

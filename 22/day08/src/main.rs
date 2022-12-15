@@ -1,7 +1,6 @@
-use std::{collections::HashSet, thread::current};
+use std::collections::HashSet;
 
 const INPUT: &str = include_str!("input");
-const TEST: &str = include_str!("test");
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Hash)]
 struct Coord {

@@ -4,7 +4,7 @@ mod monkey;
 #[cfg(test)]
 mod test_input;
 
-use std::{borrow::Borrow, cell::RefCell};
+use std::cell::RefCell;
 
 use monkey::Monkey;
 

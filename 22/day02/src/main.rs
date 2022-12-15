@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 const INPUT: &str = include_str!("input1");
 
 fn main() {

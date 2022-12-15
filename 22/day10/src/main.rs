@@ -104,8 +104,6 @@ fn main() {
 mod tests {
     const TEST: &str = include_str!("test");
 
-    use std::fs::ReadDir;
-
     use super::*;
 
     #[test]

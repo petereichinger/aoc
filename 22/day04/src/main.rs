@@ -1,5 +1,3 @@
-use std::ops::RangeInclusive;
-
 const INPUT: &str = include_str!("input");
 
 struct Range {
@@ -13,8 +11,8 @@ impl Range {
     }
 
     fn overlap(&self, other: &Self) -> bool {
-        let (min1, min2) = min_max(self.min, other.min);
-        let (max1, max2) = min_max(self.max, other.max);
+        let (_min1, min2) = min_max(self.min, other.min);
+        let (max1, _max2) = min_max(self.max, other.max);
 
         max1 >= min2
     }
