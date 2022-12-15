@@ -1,4 +1,4 @@
-use std::{fmt::Display, thread::current};
+use std::{collections::HashMap, fmt::Display};
 
 use utils_22::Coord;
 
@@ -9,11 +9,12 @@ enum Cell {
     RestingSand,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone)]
 pub struct Cave {
     min: Coord,
     max: Coord,
-    cells: Vec<Vec<Cell>>,
+    cells: HashMap<Coord, Cell>,
+    floor: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -43,9 +44,7 @@ impl From<&str> for Cave {
             .flatten()
             .fold(Coord::new(0, 0), |acc, el| acc.max(el));
 
-        let mut cells: Vec<_> = (0..=max.y())
-            .map(|_| vec![Cell::Empty; (max.x() + 1) as usize])
-            .collect();
+        let mut cells: HashMap<_, _> = HashMap::new();
 
         for coords in shapes {
             for pair in coords.windows(2) {
@@ -53,22 +52,36 @@ impl From<&str> for Cave {
                 let end = &pair[1];
 
                 for coord in begin.line_to(end) {
-                    let row = cells.get_mut(coord.y() as usize).unwrap();
-                    let cell = row.get_mut(coord.x() as usize).unwrap();
-
-                    *cell = Cell::Wall;
+                    cells.insert(coord, Cell::Wall);
                 }
             }
         }
 
-        Cave { min, max, cells }
+        Cave {
+            min,
+            max,
+            cells,
+            floor: false,
+        }
+    }
+}
+
+impl Cave {
+    pub fn with_floor(input: &str) -> Self {
+        let mut cave: Cave = input.into();
+
+        cave.max = &cave.max + &Coord::new(0, 1);
+
+        cave.floor = true;
+        cave
     }
 }
 
 impl Display for Cave {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for row in self.cells.iter().skip(self.min.y() as usize) {
-            for cell in row.iter().skip(self.min.x() as usize) {
+        for y in self.min.y()..=self.max.y() {
+            for x in self.min.x()..=self.max.x() {
+                let cell = self.cells.get(&Coord::new(x, y)).unwrap_or(&Cell::Empty);
                 write!(
                     f,
                     "{}",
@@ -79,8 +92,7 @@ impl Display for Cave {
                     }
                 )?
             }
-
-            writeln!(f)?;
+            writeln!(f)?
         }
 
         Ok(())
@@ -88,40 +100,41 @@ impl Display for Cave {
 }
 
 impl Cave {
-    fn get(&self, coord: &Coord) -> Option<&Cell> {
-        let row = self.cells.get(coord.y() as usize)?;
-        row.get(coord.x() as usize)
-    }
-    fn get_mut(&mut self, coord: &Coord) -> Option<&mut Cell> {
-        let row = self.cells.get_mut(coord.y() as usize)?;
-        row.get_mut(coord.x() as usize)
+    fn get(&self, coord: &Coord) -> &Cell {
+        self.cells.get(coord).unwrap_or(&Cell::Empty)
     }
 
     pub fn drop_sand(&mut self) -> DropResult {
         let mut current_pos = Coord::new(500, 0);
 
         while current_pos.y() < self.max.y() {
+            // println!("{current_pos}");
             let next_posses = [
                 &current_pos + &Coord::UP,
                 &(&current_pos + &Coord::UP) + &Coord::LEFT,
                 &(&current_pos + &Coord::UP) + &Coord::RIGHT,
             ];
-            println!("{:?}", next_posses);
+
             let next_empty = next_posses
                 .iter()
-                .find(|coord| matches!(self.get(coord), Some(Cell::Empty)));
+                .find(|coord| matches!(self.get(coord), Cell::Empty));
 
             match next_empty {
                 Some(coord) => current_pos = *coord,
                 None => {
                     // Found no next spot => Resting Sand and return
-                    *(self.get_mut(&current_pos).unwrap()) = Cell::RestingSand;
+                    self.cells.insert(current_pos, Cell::RestingSand);
                     return DropResult::Resting(current_pos);
                 }
             }
         }
 
-        DropResult::Overflow
+        if self.floor {
+            self.cells.insert(current_pos, Cell::RestingSand);
+            DropResult::Resting(current_pos)
+        } else {
+            DropResult::Overflow
+        }
     }
 }
 
@@ -188,5 +201,42 @@ mod tests {
         (0..24).for_each(|_| assert!(matches!(cave.drop_sand(), DropResult::Resting(_))));
 
         assert_eq!(cave.drop_sand(), DropResult::Overflow);
+    }
+
+    #[test]
+    fn test_floor() {
+        let input = include_str!("test");
+        let mut cave = Cave::with_floor(input);
+
+        (0..24).for_each(|_| {
+            let drop_result = cave.drop_sand();
+
+            println!("{:?}", drop_result);
+        });
+
+        print!("{cave}");
+        assert_eq!(cave.drop_sand(), DropResult::Resting(Coord::new(493, 10)));
+    }
+
+    #[test]
+    fn blubb() {
+        let input = include_str!("test");
+        let mut cave = Cave::with_floor(input);
+        let grains = (0..)
+            .map_while(|_| match cave.drop_sand() {
+                DropResult::Resting(pos) => {
+                    println!("{pos}");
+                    if pos == Coord::new(500, 0) {
+                        None
+                    } else {
+                        Some(pos)
+                    }
+                }
+                DropResult::Overflow => None,
+            })
+            .count()
+            + 1;
+
+        assert_eq!(grains, 93)
     }
 }
