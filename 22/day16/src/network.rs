@@ -1,11 +1,8 @@
-use core::num;
 use std::collections::{HashMap, HashSet};
-
-use itertools::Itertools;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Node {
-    rate: u32,
+    pub rate: u32,
     neighbours: Vec<String>,
 }
 
@@ -58,7 +55,7 @@ impl From<&str> for Network {
     }
 }
 
-type PathsType = HashMap<String, HashMap<String, u32>>;
+pub type PathsType = HashMap<String, HashMap<String, u32>>;
 
 impl Network {
     fn shortest_paths(&self, origin: String) -> HashMap<String, Option<String>> {
@@ -119,42 +116,7 @@ impl Network {
             })
             .collect()
     }
-
-    fn recurse(
-        &self,
-        paths: &PathsType,
-        current: String,
-        released: u32,
-        remaining_valves: HashSet<String>,
-        remaining_time: u32,
-    ) -> u32 {
-        let mut max = released;
-        for valve in &remaining_valves {
-            let new_remaining_time =
-                remaining_time.saturating_sub(*paths.get(&current).unwrap().get(valve).unwrap());
-
-            if new_remaining_time == 0 {
-                continue;
-            }
-
-            let new_released = released + new_remaining_time * self.nodes.get(valve).unwrap().rate;
-            let mut new_remaining = remaining_valves.clone();
-            new_remaining.remove(valve);
-
-            let new_value = self.recurse(
-                paths,
-                valve.clone(),
-                new_released,
-                new_remaining,
-                new_remaining_time,
-            );
-            max = max.max(new_value);
-        }
-
-        max
-    }
-
-    pub fn find_optimal_order(&self, start: String) -> u32 {
+    pub fn get_valve_nodes_and_paths(&self, start: &String) -> (HashSet<String>, PathsType) {
         let valve_nodes: HashSet<_> = self
             .nodes
             .iter()
@@ -180,7 +142,7 @@ impl Network {
             })
             .collect();
 
-        self.recurse(&paths, "AA".into(), 0, valve_nodes, 30)
+        (valve_nodes, paths)
     }
 }
 
@@ -190,18 +152,7 @@ mod tests {
 
     const TEST: &str = include_str!("test");
     #[test]
-    fn test_output() {
-        let network = Network::from(TEST);
-
-        println!("{:#?}", network);
-    }
-
-    #[test]
-    fn test_paths() {
-        let network = Network::from(TEST);
-
-        let max_release = network.find_optimal_order("AA".into());
-
-        println!("{}", max_release);
+    fn test_parsing() {
+        let _network = Network::from(TEST);
     }
 }
