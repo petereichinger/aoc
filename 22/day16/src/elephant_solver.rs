@@ -1,4 +1,4 @@
-use std::{collections::HashSet, io::stdin, thread::current};
+use std::collections::HashSet;
 
 use itertools::Itertools;
 
