@@ -58,6 +58,8 @@ impl From<&str> for Network {
     }
 }
 
+type PathsType = HashMap<String, HashMap<String, u32>>;
+
 impl Network {
     fn shortest_paths(&self, origin: String) -> HashMap<String, Option<String>> {
         let mut distances = vec![];
@@ -118,76 +120,67 @@ impl Network {
             .collect()
     }
 
-    pub fn find_optimal_order(&self, start: String) -> usize {
-        let mut valve_nodes: Vec<_> = self
+    fn recurse(
+        &self,
+        paths: &PathsType,
+        current: String,
+        released: u32,
+        remaining_valves: HashSet<String>,
+        remaining_time: u32,
+    ) -> u32 {
+        let mut max = released;
+        for valve in &remaining_valves {
+            let new_remaining_time =
+                remaining_time.saturating_sub(*paths.get(&current).unwrap().get(valve).unwrap());
+
+            if new_remaining_time == 0 {
+                continue;
+            }
+
+            let new_released = released + new_remaining_time * self.nodes.get(valve).unwrap().rate;
+            let mut new_remaining = remaining_valves.clone();
+            new_remaining.remove(valve);
+
+            let new_value = self.recurse(
+                paths,
+                valve.clone(),
+                new_released,
+                new_remaining,
+                new_remaining_time,
+            );
+            max = max.max(new_value);
+        }
+
+        max
+    }
+
+    pub fn find_optimal_order(&self, start: String) -> u32 {
+        let valve_nodes: HashSet<_> = self
             .nodes
             .iter()
-            .filter_map(
-                |(name, node)| {
-                    if node.rate == 0 {
-                        None
-                    } else {
-                        Some(name)
-                    }
-                },
-            )
+            .filter_map(|(name, node)| {
+                if node.rate == 0 {
+                    None
+                } else {
+                    Some(name.clone())
+                }
+            })
             .collect();
-        let start = &&start;
-        let start_vec = vec![start];
-        let paths: HashMap<_, _> = valve_nodes
+        let start_vec = vec![start.clone()];
+        let paths: PathsType = valve_nodes
             .iter()
-            .chain(start_vec)
+            .chain(start_vec.iter())
             .map(|node| {
                 let paths = self.get_paths_to_valves_from((*node).clone());
                 let paths: HashMap<_, _> = paths
                     .into_iter()
-                    .map(|entry| (entry[entry.len() - 1].clone(), entry))
+                    .map(|entry| (entry[entry.len() - 1].clone(), entry.len() as u32))
                     .collect();
-                (*node, paths)
+                ((*node).clone(), paths)
             })
             .collect();
 
-        valve_nodes.sort_by(|&a, &b| {
-            let a = self.nodes.get(a).unwrap();
-            let b = self.nodes.get(b).unwrap();
-
-            a.rate.cmp(&b.rate).reverse()
-        });
-
-        let num_permutations = valve_nodes.iter().permutations(valve_nodes.len()).count();
-
-        let mut max_release = 0;
-        for (idx, perm) in valve_nodes
-            .iter()
-            .permutations(valve_nodes.len())
-            .enumerate()
-        {
-            if (idx % (num_permutations / 100)) == 0 {
-                println!("{}/{}", idx, num_permutations);
-            }
-            let mut remaining_time = 30;
-            let mut current_node = String::from("AA");
-            let mut released = 0;
-            let mut current_increase = 0;
-            for valve in perm {
-                let path = paths.get(&current_node).unwrap().get(*valve).unwrap();
-                let length = (path.len()).min(remaining_time);
-                remaining_time -= length;
-                released += length * current_increase;
-                current_increase += self.nodes.get(&**valve).unwrap().rate as usize;
-                current_node = (*valve).clone();
-                if remaining_time == 0 {
-                    break;
-                }
-            }
-            released += remaining_time * current_increase;
-
-            if released > max_release {
-                max_release = released;
-                println!("{max_release}")
-            }
-        }
-        max_release
+        self.recurse(&paths, "AA".into(), 0, valve_nodes, 30)
     }
 }
 
