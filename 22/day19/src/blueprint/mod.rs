@@ -1,15 +1,16 @@
-mod cost;
 mod resource;
+mod resources;
 
 use std::collections::HashMap;
 
-pub use cost::Cost;
+pub use resources::Resources;
 
 pub use resource::Resource;
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Blueprint {
-    id: u8,
-    bots: HashMap<Resource, Cost>,
+    pub id: u8,
+    pub bots: HashMap<Resource, Resources>,
 }
 
 impl From<&str> for Blueprint {
@@ -28,7 +29,7 @@ impl From<&str> for Blueprint {
             let (res, costs) = res.split_once(" robot costs ").unwrap();
 
             let res = Resource::from(res);
-            let cost = Cost::from(costs);
+            let cost = Resources::from(costs);
 
             bots.insert(res, cost);
         }
@@ -46,35 +47,12 @@ mod tests {
         let blueprint : Blueprint = "Blueprint 1: Each ore robot costs 4 ore. Each clay robot costs 2 ore. Each obsidian robot costs 3 ore and 14 clay. Each geode robot costs 2 ore and 7 obsidian.".into();
 
         assert_eq!(blueprint.id, 1);
-        assert_eq!(
-            blueprint.bots[&Resource::Ore],
-            Cost {
-                ore: 4,
-                ..Default::default()
-            }
-        );
-        assert_eq!(
-            blueprint.bots[&Resource::Clay],
-            Cost {
-                ore: 2,
-                ..Default::default()
-            }
-        );
+        assert_eq!(blueprint.bots[&Resource::Ore], Resources::new(4, 0, 0, 0));
+        assert_eq!(blueprint.bots[&Resource::Clay], Resources::new(2, 0, 0, 0));
         assert_eq!(
             blueprint.bots[&Resource::Obsidian],
-            Cost {
-                ore: 3,
-                clay: 14,
-                ..Default::default()
-            }
+            Resources::new(3, 14, 0, 0)
         );
-        assert_eq!(
-            blueprint.bots[&Resource::Geode],
-            Cost {
-                ore: 2,
-                obsidian: 7,
-                ..Default::default()
-            }
-        );
+        assert_eq!(blueprint.bots[&Resource::Geode], Resources::new(2, 0, 7, 0));
     }
 }
