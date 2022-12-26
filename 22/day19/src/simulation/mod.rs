@@ -86,13 +86,11 @@ impl Simulation {
         max_geodes
     }
 
-    pub fn simulate(&self) -> u8 {
+    pub fn simulate(&self, simulation_duration: u8) -> u8 {
         let resources = Resources::default();
         let population = Resources::new(1, 0, 0, 0);
 
-        let remaining_time = 24;
-
-        self.simulation_step(resources, population, remaining_time)
+        self.simulation_step(resources, population, simulation_duration)
     }
 }
 
