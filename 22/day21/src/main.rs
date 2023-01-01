@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashMap, io::stdin, thread};
+use std::{cell::RefCell, collections::HashMap};
 
 type MonkeyName = String;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -137,7 +137,7 @@ fn main() {
     let mut range = (3000000000000f64, 4000000000000f64);
     // first is too large, second too small
     if let Job::Op(_, a, b) = root.job {
-        let result = loop {
+        loop {
             let middle = (range.1 + range.0) / 2.0;
 
             yell_number(&mut monkey_map, middle);
@@ -153,19 +153,9 @@ fn main() {
                 range = (range.0, middle);
             } else {
                 println!("Part 2 {middle}");
-                break middle;
+                break;
             }
-        };
-
-        // for number in (result - 1000)..(result + 1000) {
-        //     yell_number(&mut monkey_map, number);
-        //     let a = find_monkey_number(&monkey_map, Some(&monkey_cache), &a);
-        //     let b = find_monkey_number(&monkey_map, Some(&monkey_cache), &b);
-
-        //     if a == b {
-        //         println!("Part 2 {number}");
-        //     }
-        // }
+        }
     } else {
         panic!("root has wrong job");
     }
@@ -190,13 +180,13 @@ mod tests {
         let monkey_map = monkey_map(TEST);
 
         let number = find_monkey_number(&monkey_map, None, &"dbpl".into());
-        assert_eq!(number, 5);
+        assert_eq!(number, 5f64);
 
         let number = find_monkey_number(&monkey_map, None, &"hmdt".into());
-        assert_eq!(number, 32);
+        assert_eq!(number, 32f64);
 
         let number = find_monkey_number(&monkey_map, None, &"zczc".into());
-        assert_eq!(number, 2);
+        assert_eq!(number, 2f64);
     }
 
     #[test]
@@ -204,7 +194,7 @@ mod tests {
         let monkey_map = monkey_map(TEST);
         let number = find_monkey_number(&monkey_map, None, &"drzm".into());
 
-        assert_eq!(number, 30);
+        assert_eq!(number, 30f64);
     }
 
     #[test]
@@ -213,7 +203,7 @@ mod tests {
 
         let number = find_monkey_number(&monkey_map, None, &"root".into());
 
-        assert_eq!(number, 152);
+        assert_eq!(number, 152f64);
     }
 
     #[test]
@@ -223,7 +213,7 @@ mod tests {
         let root = &monkey_map["root".into()].clone();
 
         if let Job::Op(_, a, b) = &root.job {
-            yell_number(&mut monkey_map, 301);
+            yell_number(&mut monkey_map, 301f64);
 
             assert_eq!(
                 find_monkey_number(&monkey_map, None, a),
