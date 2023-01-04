@@ -26,12 +26,27 @@ fn normalize(a: i32) -> i32 {
 impl Coord {
     pub const ZERO: Coord = Coord { x: 0, y: 0 };
     pub const UP: Coord = Coord { x: 0, y: 1 };
+    pub const UP_LEFT: Coord = Coord { x: -1, y: 1 };
+    pub const UP_RIGHT: Coord = Coord { x: 1, y: 1 };
     pub const DOWN: Coord = Coord { x: 0, y: -1 };
+    pub const DOWN_LEFT: Coord = Coord { x: -1, y: -1 };
+    pub const DOWN_RIGHT: Coord = Coord { x: 1, y: -1 };
     pub const LEFT: Coord = Coord { x: -1, y: 0 };
     pub const RIGHT: Coord = Coord { x: 1, y: 0 };
 
     pub const ORTHOGONAL_NEIGHBOURS: [Coord; 4] =
         [Coord::UP, Coord::RIGHT, Coord::DOWN, Coord::LEFT];
+
+    pub const NEIGHBOURS: [Coord; 8] = [
+        Coord { x: -1, y: 1 },
+        Coord { x: 0, y: 1 },
+        Coord { x: 1, y: 1 },
+        Coord { x: -1, y: 0 },
+        Coord { x: 1, y: 0 },
+        Coord { x: 1, y: -1 },
+        Coord { x: 0, y: -1 },
+        Coord { x: -1, y: -1 },
+    ];
 
     pub fn new(x: i32, y: i32) -> Self {
         Coord { x, y }
