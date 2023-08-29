@@ -1,8 +1,8 @@
-const part1: &str = include_str!("input");
+const INPUT: &str = include_str!("input");
 
 fn main() {
-    println!("{}", go_to_floor(part1));
-    println!("{}", find_basement(part1));
+    println!("{}", go_to_floor(INPUT));
+    println!("{}", find_basement(INPUT));
 }
 
 fn instruction_map(instruction: char) -> i32 {
